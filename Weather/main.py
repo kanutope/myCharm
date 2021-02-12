@@ -7,18 +7,12 @@ import json
 import requests
 import time as tm
 
-# OWM = OpenWeatherMap
-KEYS = {'OWM': None
-        }
-KEYFILES = {'OWM': 'openweathermap.key'
-            }
 
-ZIP = {'De Panne': 8660,
-       'Oostende': 8400
-       }
-COORD = {8660: {'lat': 51.0935, 'lon': 2.5776},
-         8400: {'lat': 51.2322, 'lon': 2.9144}
-         }
+LOCATIONS = {}
+KEYFILES = {}
+KEYS = {'OWM': None     # OWM = OpenWeatherMap
+        }
+
 
 WINDDIR = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
 WINDRNG = 360 / 16.0
@@ -28,14 +22,30 @@ WINDDESC = ['Windstil', 'Zwakke wind', 'Zwakke wind', 'Matige wind', 'Matige win
 MPS2KNT = 3600 / 1852
 
 
+def init_locations():
+    locations = {}
+
+    with open('locations.json', 'r') as fp:
+        locations = json.loads(fp.read())
+
+    return locations
+
+
+def init_keyfiles():
+    keyfiles = {}
+
+    with open('keyfiles.json', 'r') as fp:
+        keyfiles = json.loads(fp.read())
+
+    return keyfiles
+
+
 def get_openweathermap_key(prov='None'):
     """
 
     :param prov:
     :return:
     """
-    global KEYS
-
     if prov in KEYS:
         if KEYS[prov] is None:
             with open(KEYFILES[prov], 'r') as fp:
@@ -71,8 +81,8 @@ def download_report(lat: float, lon: float) -> str:
     return ret
 
 
-def fetch(zipcode) -> dict:
-    loc = COORD[zipcode]
+def fetch(code) -> dict:
+    loc = LOCATIONS[code]
     response = json.loads(download_report(loc['lat'], loc['lon']))
     return response
 
@@ -105,8 +115,18 @@ def loop(data=None):
         print(out)
 
 
+def test():
+    global LOCATIONS
+    global KEYFILES
+
+    LOCATIONS = init_locations()
+    KEYFILES = init_keyfiles()
+
+    return fetch("8660")
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    fetch(8660)
+    print(test())
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
