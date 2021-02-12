@@ -1,6 +1,11 @@
-'''
+"""
+  Try out
+  fetching weather information - forecasts - from several sources.
+"""
 
-'''
+import json
+import requests
+import time as tm
 
 # OWM = OpenWeatherMap
 KEYS = {'OWM': None
@@ -24,6 +29,11 @@ MPS2KNT = 3600 / 1852
 
 
 def get_openweathermap_key(prov='None'):
+    """
+
+    :param prov:
+    :return:
+    """
     global KEYS
 
     if prov in KEYS:

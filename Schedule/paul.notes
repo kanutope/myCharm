@@ -1,0 +1,60 @@
+# python -c command [arg] ...
+# python -m module  [arg] ...
+
+# line 0   #!/usr/bin/env python
+# line 0/1 # -*- coding: cp1252 -*-
+
+# 17 // 3.0  # explicit floor division discards the fractional part
+# 17 % 3     # the % operator returns the remainder of the division
+
+# the last printed expression is assigned to the variable _
+
+# When using print() command, if you don’t want characters prefaced by \ to be interpreted as special characters,
+# you can use raw strings by adding an r before the first quote
+#     E.g. r"Raw text\n <= does not lead to a new line"
+
+# word[-1]   : last character
+# word[-2]   : second-last character
+# word[0:2] => substring from first position (0) till (2-1)
+#    start is always included, the end always excluded
+#    omitted first index defaults to zero, an omitted second index defaults to the size of the string
+# word[:2]   : character from the beginning to position 2 (excluded)
+# word[4:]   : characters from position 4 (included) to the end
+# word[-2:]  : characters from the second-last (included) to the end
+
+# len(s)
+
+# All slice operations return a new list containing the requested elements.
+# This means that the following slice returns a new (shallow) copy of the list:
+# >>> squares[:]
+
+# If you need to modify the sequence you are iterating over while inside the loop
+# (for example to duplicate selected items), it is recommended that you first make a copy.
+# Iterating over a sequence does not implicitly make a copy. The slice notation makes this
+# especially convenient:
+# >>> for w in words[:]:  # Loop over a slice copy of the entire list.
+# ...     if len(w) > 6:
+# ...         words.insert(0, w)
+
+# The given end point is never part of the generated sequence; range(n) generates <n> values,
+# the legal indices for items of a sequence of length <n>.
+
+# >>> for i in range(len(a)):
+# ...     print(i, a[i])
+
+# for n in range(2, 10):
+#      for x in range(2, n):
+# 		if n % x == 0:
+# 			print(n, 'equals', x, '*', n//x)
+# 			break
+# 		else:
+# 			# loop fell through without finding a factor
+# 			print(n, 'is a prime number')
+
+# Remember, you can never know for sure what names a module exports,
+# so either take what you need —
+#	>>>from module import name1, name2,
+# or keep them in the module and access on a per-need basis —
+#	>>> import module;print module.name.
+
+# from SocketServer import (TCPServer as TCP, StreamRequestHandler as SRH)
