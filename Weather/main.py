@@ -2,27 +2,25 @@ import WeatherForecast as wf
 # Press the green button in the gutter to run the script.
 
 
-def printReport(loc, rep, qry):
-    print(loc, rep, qry)
-    print(wf.fetchAPI(loc, rep, qry))
+def printReport(loc, prov, rep):
+    print(loc, prov, rep)
+    print(wf.fetchAPI(loc, prov, rep))
 
 
-def test(loc, prov='', qry=''):
-    wf.initAPIconfig()
-
+def test(loc, prov='', rep=''):
     if len(prov) == 0:
-        for __prov in list(wf.APICONFIG):
-            for __qry in list(wf.APICONFIG[__prov]["reports"]):
-                printReport(loc, __prov, __qry)
+        for __prov in wf.listProviders():
+            for __rep in wf.getReports(__prov):
+                printReport(loc, __prov, __rep)
     else:
-        if len(qry) == 0:
-            for __qry in list(wf.APICONFIG[prov]["reports"]):
-                printReport(loc, prov, __qry)
+        if len(rep) == 0:
+            for __rep in wf.listReports(prov):
+                printReport(loc, prov, __rep)
         else:
-            printReport(loc, prov, qry)
+            printReport(loc, prov, rep)
 
 
 if __name__ == "__main__":
-    test("EBFN")
+    test("EBFN", "WAPI")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

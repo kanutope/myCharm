@@ -1,7 +1,6 @@
 {
   "OWM": {
     "keyfile": "query/openweathermap.key",
-    "key": "",
     "reports": {
       "forecast": {
         "url": "https://api.openweathermap.org/data/2.5/forecast?lat={lat:.4f}&lon={lon:.4f}&appid={key}",
@@ -19,7 +18,6 @@
   },
   "WAPI": {
     "keyfile": "query/weatherapi.key",
-    "key": "",
     "reports": {
       "forecast": {
         "url": "https://api.weatherapi.com/v1/forecast.json?key={key}&q={lat:.4f},{lon:.4f}",
@@ -29,7 +27,6 @@
   },
   "WBIT": {
     "keyfile": "query/weatherbit.key",
-    "key": "",
     "reports": {
       "current": {
         "url": "https://api.weatherbit.io/v2.0/current?key={key}&lat={lat:.4f}&lon={lon:.4f}",
@@ -43,7 +40,6 @@
   },
   "ACCU": {
     "keyfile": "query/accuweather.key",
-    "key": "",
     "reports": {
       "daily": {
         "url": "http://dataservice.accuweather.com/forecasts/v1/daily/5day/{id}?apikey={key}",
