@@ -37,9 +37,6 @@ class class_APIconfig:
 
         return self.keys[prov]
 
-    """
-    public methods
-    """
     def getURL(self, prov, rep, lat, lon, lid):
         key = self.__getAPIkey(prov)
         return (self.config[prov]["reports"][rep]["url"]).format(key=key, lat=lat, lon=lon, lid=lid)
