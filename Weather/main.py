@@ -1,5 +1,6 @@
 import WeatherForecast as wf
-# Press the green button in the gutter to run the script.
+import time as tm
+import json
 
 
 def printReport(loc, prov, rep):
@@ -7,20 +8,33 @@ def printReport(loc, prov, rep):
     print(wf.fetchAPI(loc, prov, rep))
 
 
-def test(loc, prov='', rep=''):
+def dumpReport(loc, prov, rep):
+    ts = tm.strftime("%Y%m%d-%H%M", tm.localtime())
+
+    out = wf.fetchAPI(loc, prov, rep)
+    if len(out) > 0:
+        nam = f"output/{prov}-{rep}_{loc}_{ts}.json"
+        with open(nam, "w") as fp:
+            print(ts, loc, prov, rep, json.dump(out, fp, indent=2))
+
+
+def execute(func, loc, prov='', rep=''):
     if len(prov) == 0:
         for __prov in wf.listProviders():
-            for __rep in wf.getReports(__prov):
-                printReport(loc, __prov, __rep)
+            for __rep in wf.listReports(__prov):
+                func(loc, __prov, __rep)
     else:
         if len(rep) == 0:
             for __rep in wf.listReports(prov):
-                printReport(loc, prov, __rep)
+                func(loc, prov, __rep)
         else:
-            printReport(loc, prov, rep)
+            func(loc, prov, rep)
 
 
+# Press the green button in the gutter to run the script.
 if __name__ == "__main__":
-    test("EBFN", "WAPI")
+    #    execute(dumpReport, "EBFN", "WAPI")
+    execute(dumpReport, "8660", "OWMP", "onecall")
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

@@ -39,7 +39,7 @@ class class_APIconfig:
 
     def getURL(self, prov, rep, lat, lon, lid):
         key = self.__getAPIkey(prov)
-        return (self.config[prov]["reports"][rep]["url"]).format(key=key, lat=lat, lon=lon, lid=lid)
+        return (self.config[prov]["reports"][rep]["url"]).format(key=key, lat=lat, lon=lon, id=lid)
 
     def getPayload(self, prov, rep):
         return self.config[prov]["reports"][rep]["payload"]

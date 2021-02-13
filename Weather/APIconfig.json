@@ -1,5 +1,5 @@
 {
-  "OWM": {
+  "OWMP": {
     "keyfile": "query/openweathermap.key",
     "reports": {
       "forecast": {
