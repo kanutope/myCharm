@@ -2,6 +2,18 @@
   Try out
   fetching weather information - forecasts - from several sources.
 """
+"""
+UNLICENSE:
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+"""
+
+# SPDX-License-Identifier: Unlicense
+
 
 import json
 
@@ -100,10 +112,10 @@ def fetchAPI(code, prov, rep) -> dict:
     return response
 
 
-def fetchFile(fnam="openweather.DEPANNE") -> dict:
-    fp = open(fnam, "r")
-    response = json.loads(fp.read())
-    return response
+def fetchFile(fnam) -> dict:
+    with open(fnam, "r") as fp:
+        response = json.loads(fp.read())
+        return response
 
 
 def loop(data=None):

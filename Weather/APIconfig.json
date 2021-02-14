@@ -43,11 +43,11 @@
     "reports": {
       "daily": {
         "url": "http://dataservice.accuweather.com/forecasts/v1/daily/5day/{id}?apikey={key}",
-        "payload": {"details":"true","metric":"true"}
+        "payload": {"details":"true","metric":"true", "language": "nl"}
       },
       "hourly": {
         "url": "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/{id}?apikey={key}",
-        "payload": {"details":"true","metric":"true"}
+        "payload": {"details":"true","metric":"true", "language": "nl"}
       }
     }
   }
