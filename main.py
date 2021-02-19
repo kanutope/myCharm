@@ -82,12 +82,13 @@ if __name__ == "__main__":
     #    wf.loop("8660", "OWMP", "forecast")
     #    obj = wf.ACCUdaily_class(wf.fetchFile("8660", "ACCU", "daily"))
 
+    ACCU.initACCU()
     #
     fnam = f"{wf.getOutputDir()}/{wf.getLatest('8660', 'ACCU', 'daily')[0]}"
     #
     print(fnam)
-    #
-    obj = ACCU.ACCUdaily_class(wf.fetchFile(fnam))
+    #    obj = ACCU.ACCUdaily_class(wf.fetchFile(fnam))
+    obj = wf.getClass("ACCU", "daily")(wf.fetchFile(fnam))
 
     #    obj = wf.fetchAPI('8660', 'ACCU', 'hourly')
     #    print(obj)

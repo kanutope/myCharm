@@ -52,6 +52,12 @@ class class_APIconfig:
             self.config = json.loads(fp.read())
             fp.close()
 
+            cnf = self.config
+            for prov in cnf:
+                reps = cnf[prov]["reports"]
+                for rep in reps:
+                    reps[rep]["class"] = None
+
     def __getAPIkey(self, prov):
         if not (prov in list(self.keys)):
             with open(self.config[prov]["keyfile"], "r") as fp:
@@ -104,8 +110,16 @@ __APIconfig = class_APIconfig()
 
 
 """
-    Public functions accessing the static objects
+    Public functions accessing __APIconfig
 """
+
+
+def setClass(prov, rep, repClass):
+    __APIconfig.config[prov]["reports"][rep]["class"] = repClass
+
+
+def getClass(prov, rep):
+    return __APIconfig.config[prov]["reports"][rep]["class"]
 
 
 def listProviders():
@@ -114,6 +128,11 @@ def listProviders():
 
 def listReports(prov):
     return __APIconfig.listReports(prov)
+
+
+"""
+    Public functions accessing __Config
+"""
 
 
 def getOutputDir():
@@ -126,6 +145,11 @@ def getQueryDir():
 
 def getStructDir():
     return __Config.getStructDir()
+
+
+"""
+    Public functions used by the Report data classes
+"""
 
 
 def epoch2str(epoch):
@@ -141,7 +165,7 @@ def epoch2time(epoch):
 """
 
 
-class Record_super:
+class Report_super:
     def __init__(self):
         self.EffectiveEpoch = -1
         self.Forecasts = []

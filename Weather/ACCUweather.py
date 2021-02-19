@@ -69,7 +69,7 @@ class ACCUdailyForecast_class(wf.Forecast_super):
         }
 
 
-class ACCUdaily_class(wf.Record_super):
+class ACCUdaily_class(wf.Report_super):
     """ __init__()
         ----------
     """
@@ -79,3 +79,10 @@ class ACCUdaily_class(wf.Record_super):
         for fc in report["DailyForecasts"]:
             self.Forecasts.append(ACCUdailyForecast_class(fc))
 
+    @staticmethod
+    def setClass():
+        wf.setClass("ACCU", "daily", ACCUdaily_class)
+
+
+def initACCU():
+    ACCUdaily_class.setClass()
