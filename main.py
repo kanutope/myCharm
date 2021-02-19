@@ -10,7 +10,8 @@ means.
 
 # SPDX-License-Identifier: Unlicense
 
-import WeatherForecast as wf
+import Weather.WeatherForecast as wf
+import Weather.ACCUweather as ACCU
 import time as tm
 import json
 
@@ -35,20 +36,64 @@ def execute(func, loc, prov="", rep=""):
         for __prov in wf.listProviders():
             for __rep in wf.listReports(__prov):
                 func(loc, __prov, __rep)
+    elif len(rep) == 0:
+        for __rep in wf.listReports(prov):
+            func(loc, prov, __rep)
     else:
-        if len(rep) == 0:
-            for __rep in wf.listReports(prov):
-                func(loc, prov, __rep)
-        else:
-            func(loc, prov, rep)
+        func(loc, prov, rep)
 
+
+class A_class:
+    def __init__(self):
+        print("A class")
+
+    def __str__(self):
+        return "A class"
+
+
+class B_class:
+    def __init__(self):
+        print("B class")
+
+    def __str__(self):
+        return "B class"
+
+
+class C_class:
+    def __init__(self):
+        print("C class")
+
+    def __str__(self):
+        return "C class"
+
+
+constructors = {
+    "A": A_class,
+    "B": B_class,
+    "C": C_class
+}
 
 # Press the green button in the gutter to run the script.
 if __name__ == "__main__":
     #    execute(dumpReport, "EBFN", "WAPI")
     #    execute(dumpReport, "8660", "ACCU")
-    execute(dumpReport, "8660")
+    #    execute(dumpReport, "8660")
     #    wf.getStructure(loc="8860")
-    wf.loop("8660", "OWMP", "forecast")
+    #    wf.loop("8660", "OWMP", "forecast")
+    #    obj = wf.ACCUdaily_class(wf.fetchFile("8660", "ACCU", "daily"))
+
+    #
+    fnam = f"{wf.getOutputDir()}/{wf.getLatest('8660', 'ACCU', 'daily')[0]}"
+    #
+    print(fnam)
+    #
+    obj = ACCU.ACCUdaily_class(wf.fetchFile(fnam))
+
+    #    obj = wf.fetchAPI('8660', 'ACCU', 'hourly')
+    #    print(obj)
+    #    obj = constructors[input("Enter A, B or C: ")]()
+    #
+    print(obj)
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

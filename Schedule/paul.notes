@@ -55,6 +55,6 @@
 # so either take what you need —
 #	>>>from module import name1, name2,
 # or keep them in the module and access on a per-need basis —
-#	>>> import module;print module.name.
+#	>>> import module; print module.name.
 
 # from SocketServer import (TCPServer as TCP, StreamRequestHandler as SRH)

@@ -15,12 +15,18 @@ means.
 # SPDX-License-Identifier: Unlicense
 
 
-import json
-import os
-import re
+import json         # noqa
+import os           # noqa
+import re           # noqa
 
-import requests
-import time as tm
+import requests     # noqa
+import time as tm   # noqa
+from datetime import datetime as dt     # noqa
+
+
+"""
+    Class definitions
+"""
 
 
 class class_Locations:
@@ -87,9 +93,19 @@ class class_Config:
         return self.config["struct"]
 
 
+"""
+    Static objects
+"""
+
+
 __Config = class_Config()
 __Locations = class_Locations()
 __APIconfig = class_APIconfig()
+
+
+"""
+    Public functions accessing the static objects
+"""
 
 
 def listProviders():
@@ -112,12 +128,89 @@ def getStructDir():
     return __Config.getStructDir()
 
 
-WINDDIR = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
-WINDRNG = 360 / 16.0
+def epoch2str(epoch):
+    return dt.fromtimestamp(epoch).isoformat(sep=' ')
+
+
+def epoch2time(epoch):
+    return tm.strftime("%H:%M", tm.localtime(epoch))
+
+
+"""
+    Data record (class) definitions
+"""
+
+
+class Record_super:
+    def __init__(self):
+        self.EffectiveEpoch = -1
+        self.Forecasts = []
+
+    def __str__(self):
+        ret = f"EffectiveDate = {epoch2str(self.EffectiveEpoch)} - "
+        for fc in self.Forecasts:
+            ret = f"{ret}\n  {str(fc)}"
+        return ret
+
+
+class Forecast_super:
+    def __init__(self):
+        self.ForecastEpoch = -1
+        self.temperatures = []
+        self.Sun = None
+        self.Moon = None
+
+    def __str__(self):
+        temperatures = self.temperatures
+        unit = temperatures["Unit"]
+        temp = temperatures["Temp"]
+        feel = temperatures["Feel"]
+        shade = temperatures["Shade"]
+
+        ret = f"forecast {epoch2str(self.ForecastEpoch)} - " \
+              f"Sun: {str(self.Sun)} - Moon: {str(self.Moon)}" \
+              f"\n    Temper. Min:{temp['Min']:5.1f}{unit} Max:{temp['Max']:5.1f}{unit}" \
+              f"      gevoels Min:{feel['Min']:5.1f}{unit} Max:{feel['Max']:5.1f}{unit}" \
+              f"      schaduw Min:{shade['Min']:5.1f}{unit} Max:{shade['Max']:5.1f}{unit}"
+        return ret
+
+
+class Transition_super:
+    def __init__(self):
+        self.RiseEpoch = -1
+        self.SetEpoch = -1
+        self.Phase = ""
+        self.Age = -1
+
+    def __str__(self):
+        Rise = int(self.RiseEpoch / (3600 * 24))
+        Set = int(self.SetEpoch / (3600 * 24))
+
+        ret = f"[rise {epoch2time(self.RiseEpoch)}  set    {epoch2time(self.SetEpoch)}]" \
+            if Rise == Set else \
+            f"[rise {epoch2time(self.SetEpoch)}  set +1 {epoch2time(self.RiseEpoch)}]"
+
+        if self.Age > -1:
+            ret = f"{ret} - Phase:{self.Phase:14s}  Age:{self.Age}"
+        return ret
+
+
+"""
+    Some static (constant) variables
+"""
+
+
+MPS2KNT = 3600 / 1852
+WINDDIV = 360 / 16.0
 WINDBFT = [1, 3, 6, 10, 16, 21, 27, 33, 40, 47, 55, 63, 999]
+WINDDIR = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
 WINDDESC = ["Windstil", "Zwakke wind", "Zwakke wind", "Matige wind", "Matige wind", "Vrij krachtige wind",
             "Krachtige wind", "Harde wind", "Stormachtige wind", "Storm", "Zware storm", "Zeer zware storm", "Orkaan"]
-MPS2KNT = 3600 / 1852
+
+
+"""
+    Public functions
+"""
 
 
 def beaufort(spd):
@@ -140,8 +233,9 @@ def getReport(code: str, prov: str, rep: str) -> str:
     if r.status_code == 200:
         return r.text  # .content
     else:
-        print("Error %d" % r.status_code)
-        return ""
+        print(f"Error {r.status_code}")
+        print(r.text)
+        return "{}"
 
 
 def fetchAPI(code, prov, rep) -> dict:
@@ -202,24 +296,23 @@ def getLatest(loc="", prov="", rep=""):
 
     prev = ""
     mask = ""
-    last = []
+    latest = []
     for f in [f for f in sorted(os.listdir(getOutputDir())) if patt.search(f) is not None]:
         curr = re.sub(r"_[0-9]{8}-[0-9]{4}.json", "", f)
 
         if mask == "":
             mask = curr
-        else:
-            if curr != mask:
-                if len(mask) > 0:
-                    last.append(prev)
-                mask = curr
+        elif curr != mask:
+            if len(mask) > 0:
+                latest.append(prev)
+            mask = curr
 
         prev = f
 
     if len(prev) > 0:
-        last.append(prev)
+        latest.append(prev)
 
-    return last
+    return latest
 
 
 def getStructure(loc="", prov="", rep=""):
@@ -245,7 +338,7 @@ def loop(loc="", prov="", rep=""):
             wthr = rec["weather"]
             wind = rec["wind"]
 
-            indx = int(((wind["deg"] + WINDRNG / 2.0) % 360) / WINDRNG)
+            indx = int(((wind["deg"] + WINDDIV / 2.0) % 360) / WINDDIV)
             knts = wind["speed"] * MPS2KNT
             bft = beaufort(knts)
 
