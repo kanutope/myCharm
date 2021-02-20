@@ -70,7 +70,6 @@ constructors = {
 
 # Press the green button in the gutter to run the script.
 if __name__ == "__main__":
-    #    execute(dumpReport, "EBFN", "WAPI")
     #    execute(dumpReport, "8660", "ACCU")
     #    execute(dumpReport, "8660")
     #    wf.getStructure(loc="8860")
