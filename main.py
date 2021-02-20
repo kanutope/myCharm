@@ -16,11 +16,6 @@ import time as tm
 import json
 
 
-def fetch_and_print(loc, prov, rep):
-    print(loc, prov, rep)
-    print(wf.fetchAPI(loc, prov, rep))
-
-
 def dumpReport(loc, prov, rep):
     resp = wf.fetchAPI(loc, prov, rep)
     if len(resp) > 0:
@@ -80,20 +75,10 @@ if __name__ == "__main__":
     #    execute(dumpReport, "8660")
     #    wf.getStructure(loc="8860")
     #    wf.loop("8660", "OWMP", "forecast")
-    #    obj = wf.ACCUdaily_class(wf.fetchFile("8660", "ACCU", "daily"))
 
     ACCU.initACCU()
-    #
     fnam = f"{wf.getOutputDir()}/{wf.getLatest('8660', 'ACCU', 'daily')[0]}"
-    #
-    print(fnam)
-    #    obj = ACCU.ACCUdaily_class(wf.fetchFile(fnam))
     obj = wf.getClass("ACCU", "daily")(wf.fetchFile(fnam))
-
-    #    obj = wf.fetchAPI('8660', 'ACCU', 'hourly')
-    #    print(obj)
-    #    obj = constructors[input("Enter A, B or C: ")]()
-    #
     print(obj)
 
 
