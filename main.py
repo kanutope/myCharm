@@ -73,7 +73,7 @@ if __name__ == "__main__":
     #    execute(dumpReport, "8660", "ACCU")
     #    execute(dumpReport, "8660")
     #    wf.getStructure(loc="8860")
-    #    wf.loop("8660", "OWMP", "forecast")
+    #    wf.loop("8660", "OWMP", "forecast") -  should be removed
 
     ACCU.initACCU()
     fnam = f"{wf.getOutputDir()}/{wf.getLatest('8660', 'ACCU', 'daily')[0]}"
