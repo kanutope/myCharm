@@ -33,6 +33,7 @@ import Weather.WeatherForecast as wf
 
 class ACCUtransition_class(wf.Transition_super):
     def __init__(self, trans):
+        super().__init__()
         self.Age = -1
         self.Phase = ""
         self.RiseEpoch = trans["EpochRise"]
@@ -44,11 +45,43 @@ class ACCUtransition_class(wf.Transition_super):
             self.Age = trans["Age"]
 
 
+class ACCUprecipitation_class(wf.Precipitation_super):
+    def __init__(self, daynight):
+        super().__init__()
+        self.Probability = daynight["PrecipitationProbability"]
+        self.Type = daynight["PrecipitationType"]
+        self.Intensity = daynight["PrecipitationIntensity"]
+        self.Phrase = daynight["ShortPhrase"]
+        self.ProbThunderstorm = daynight["ThunderstormProbability"]
+        self.ProbRain = daynight["RainProbability"]
+        self.ProbSnow = daynight["SnowProbability"]
+        self.ProbIce = daynight["IceProbability"]
+        self.Hours = daynight["HoursOfPrecipitation"]
+        self.HrsRain = daynight["HoursOfRain"]
+        self.HrsSnow = daynight["HoursOfSnow"]
+        self.HrsIce = daynight["HoursOfIce"]
+
+
+class ACCUdaynightfcast_class(wf.Daynightfcast_super):
+    def __init__(self, daynight):
+        super().__init__()
+        self.Phrase = daynight["IconPhrase"]
+        if daynight["HasPrecipitation"]:
+            self.Precipitation = ACCUprecipitation_class(daynight)
+        else:
+            self.Precipitation = None
+
+        self.Wind = None
+        self.Gust = None
+        self.CloudCover = -1
+
+
 class ACCUdailyForecast_class(wf.Forecast_super):
     """ __init__()
         ----------
     """
     def __init__(self, fc):
+        super().__init__()
         self.ForecastEpoch = fc["EpochDate"]
         self.Sun = ACCUtransition_class(fc["Sun"])
         self.Moon = ACCUtransition_class(fc["Moon"])
@@ -67,6 +100,9 @@ class ACCUdailyForecast_class(wf.Forecast_super):
                 "Max": fc["RealFeelTemperatureShade"]["Maximum"]["Value"]
             }
         }
+        self.SunHours = fc["HoursOfSun"]
+        self.Day = ACCUdaynightfcast_class(fc["Day"])
+        self.Night = ACCUdaynightfcast_class(fc["Night"])
 
 
 class ACCUdaily_class(wf.Report_super):
@@ -74,6 +110,7 @@ class ACCUdaily_class(wf.Report_super):
         ----------
     """
     def __init__(self, report):
+        super().__init__()
         self.EffectiveEpoch = report["Headline"]["EffectiveEpochDate"]
         self.Forecasts = []
         for fc in report["DailyForecasts"]:
@@ -86,3 +123,4 @@ class ACCUdaily_class(wf.Report_super):
 
 def initACCU():
     ACCUdaily_class.setClass()
+    return

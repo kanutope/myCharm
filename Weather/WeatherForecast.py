@@ -23,6 +23,12 @@ import requests     # noqa
 import time as tm   # noqa
 from datetime import datetime as dt     # noqa
 
+myPath = os.path.dirname(os.path.abspath(__file__))
+
+
+def fullPath(path):
+    return myPath+"/"+path
+
 
 """
     Class definitions
@@ -30,11 +36,8 @@ from datetime import datetime as dt     # noqa
 
 
 class class_Locations:
-    """ __init__()
-        ----------
-    """
     def __init__(self):
-        with open("locations.json", "r") as fp:
+        with open(fullPath("locations.json"), "r") as fp:
             self.locations = json.loads(fp.read())
             fp.close()
 
@@ -43,12 +46,9 @@ class class_Locations:
 
 
 class class_APIconfig:
-    """ __init__()
-        ----------
-    """
     def __init__(self):
         self.keys = {}
-        with open("APIconfig.json", "r") as fp:
+        with open(fullPath("APIconfig.json"), "r") as fp:
             self.config = json.loads(fp.read())
             fp.close()
 
@@ -60,7 +60,7 @@ class class_APIconfig:
 
     def __getAPIkey(self, prov):
         if not (prov in list(self.keys)):
-            with open(self.config[prov]["keyfile"], "r") as fp:
+            with open(fullPath(self.config[prov]["keyfile"]), "r") as fp:
                 self.keys[prov] = fp.readline().replace("\n", "")
                 fp.close()
 
@@ -85,18 +85,18 @@ class class_Config:
         ----------
     """
     def __init__(self):
-        with open("config.json", "r") as fp:
+        with open(fullPath("config.json"), "r") as fp:
             self.config = json.loads(fp.read())
             fp.close()
 
     def getOutputDir(self):
-        return self.config["output"]
+        return fullPath(self.config["output"])
 
     def getQueryDir(self):
-        return self.config["query"]
+        return fullPath(self.config["query"])
 
     def getStructDir(self):
-        return self.config["struct"]
+        return fullPath(self.config["struct"])
 
 
 """
@@ -177,12 +177,58 @@ class Report_super:
         return ret
 
 
+class Precipitation_super:
+    def __init__(self):
+        self.Probability = -1
+        self.Type = ""
+        self.Intensity = ""
+        self.Phrase = ""
+        self.ProbThunder = -1
+        self.ProbRain = -1
+        self.ProbSnow = -1
+        self.ProbIce = -1
+        self.Hours = -1
+        self.HrsRain = -1
+        self.HrsSnow = -1
+        self.HrsIce = -1
+
+    def __str__(self):
+        ret = f"Neerslag - prob.:{self.Probability:d} intens.:{self.Intensity} type:{self.Type}" \
+              f" descr:\'{self.Phrase}\'" \
+              f" rain:{self.ProbRain} thunder:{self.ProbThunder} snow:{self.ProbSnow} ice:{self.ProbIce}"
+        return ret
+
+
+class Wind_super:
+    def __init__(self):
+        self.Speed = -1
+        self.SpeedUnit = ""
+        self.Degrees = -1
+        self.Direction = ""
+
+
+class Daynightfcast_super:
+    def __init__(self):
+        self.Phrase = ""
+        self.Precipitation = None
+        self.Wind = None
+        self.Gust = None
+        self.CloudCover = -1
+
+    def __str__(self):
+        ret = f"\'{self.Phrase:<18s}\' - {'Geen neerslag' if self.Precipitation is None else str(self.Precipitation)}"
+        return ret
+
+
 class Forecast_super:
     def __init__(self):
         self.ForecastEpoch = -1
-        self.temperatures = []
+        self.temperatures = {}
         self.Sun = None
         self.Moon = None
+        self.SunHours = -1
+        self.Day = None
+        self.Night = None
 
     def __str__(self):
         temperatures = self.temperatures
@@ -192,10 +238,12 @@ class Forecast_super:
         shade = temperatures["Shade"]
 
         ret = f"forecast {epoch2str(self.ForecastEpoch)} - " \
-              f"Sun: {str(self.Sun)} - Moon: {str(self.Moon)}" \
-              f"\n    Temper. Min:{temp['Min']:5.1f}{unit} Max:{temp['Max']:5.1f}{unit}" \
-              f"      gevoels Min:{feel['Min']:5.1f}{unit} Max:{feel['Max']:5.1f}{unit}" \
-              f"      schaduw Min:{shade['Min']:5.1f}{unit} Max:{shade['Max']:5.1f}{unit}"
+              f"Zon: {str(self.Sun)} - Maan: {str(self.Moon)}\n" \
+              f"    Zon: {self.SunHours:.1f}hrs Temp. min:{temp['Min']:5.1f}{unit} max:{temp['Max']:5.1f}{unit}" \
+              f"    gevoels min:{feel['Min']:5.1f}{unit} max:{feel['Max']:5.1f}{unit}" \
+              f"    schaduw min:{shade['Min']:5.1f}{unit} max:{shade['Max']:5.1f}{unit}\n" \
+              f"    Dag:   {str(self.Day)}\n" \
+              f"    Nacht: {str(self.Night)}"
         return ret
 
 
