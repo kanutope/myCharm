@@ -206,6 +206,10 @@ class Wind_super:
         self.Degrees = -1
         self.Direction = ""
 
+    def __str__(self):
+        ret = f"Speed={self.Speed} {self.SpeedUnit} {self.Direction}"
+        return ret
+
 
 class Daynightfcast_super:
     def __init__(self):
@@ -216,13 +220,16 @@ class Daynightfcast_super:
         self.CloudCover = -1
 
     def __str__(self):
-        ret = f"\'{self.Phrase:<18s}\' - {'Geen neerslag' if self.Precipitation is None else str(self.Precipitation)}"
+        ret = f"\'{self.Phrase:<18s}\' - {'Geen neerslag' if self.Precipitation is None else str(self.Precipitation)}" \
+              f"\n           Wind: {str(self.Wind)}    Rukwind: {str(self.Gust)}"
         return ret
 
 
 class Forecast_super:
     def __init__(self):
         self.ForecastEpoch = -1
+        self.Phrase = ""
+        self.isDayLight = False
         self.temperatures = {}
         self.Sun = None
         self.Moon = None

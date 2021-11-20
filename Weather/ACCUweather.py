@@ -14,20 +14,11 @@ means.
 
 # SPDX-License-Identifier: Unlicense
 
-"""
-import json                             # noqa
-import os                               # noqa
-import re                               # noqa
-
-import requests                         # noqa
-import time as tm                       # noqa
-from datetime import datetime as dt     # noqa
-"""
 
 import Weather.WeatherForecast as wf
 
 """
-    Class definitions
+    Class definitions ACCUweather Daily report
 """
 
 
@@ -43,6 +34,14 @@ class ACCUtransition_class(wf.Transition_super):
             self.Phase = trans["Phase"]
         if "Age" in list(trans):
             self.Age = trans["Age"]
+
+
+class ACCUwind_class(wf.Wind_super):
+    def __init__(self, wind):
+        self.Speed = wind["Speed"]["Value"]
+        self.SpeedUnit = wind["Speed"]["Unit"]
+        self.Degrees = wind["Direction"]["Degrees"]
+        self.Direction = wind["Direction"]["Localized"]
 
 
 class ACCUprecipitation_class(wf.Precipitation_super):
@@ -71,9 +70,9 @@ class ACCUdaynightfcast_class(wf.Daynightfcast_super):
         else:
             self.Precipitation = None
 
-        self.Wind = None
-        self.Gust = None
-        self.CloudCover = -1
+        self.Wind = ACCUwind_class(daynight["Wind"])
+        self.Gust = ACCUwind_class(daynight["WindGust"])
+        self.CloudCover = daynight["CloudCover"]
 
 
 class ACCUdailyForecast_class(wf.Forecast_super):
@@ -119,6 +118,33 @@ class ACCUdaily_class(wf.Report_super):
     @staticmethod
     def setClass():
         wf.setClass("ACCU", "daily", ACCUdaily_class)
+
+"""
+    Class definitions ACCUweather Daily report
+"""
+
+
+class ACCUhourlyForecast_class(wf.Forecast_super):
+    """ __init__()
+        ----------
+    """
+    def __init__(self, fc):
+        super().__init__()
+        self.ForecastEpoch = fc["EpochDateTime"]
+        self.Phrase = fc["IconPhrase"]
+        self.isDayLight = fc["IsDaylight"]
+        self.temperatures = {
+            "Unit": fc["Temperature"]["Unit"],
+            "Temp": {
+                "Val": fc["Temperature"]["Value"]
+            },
+            "Feel": {
+                "Val": fc["RealFeelTemperature"]["Value"]
+            }
+        }
+        self.SunHours = fc["HoursOfSun"]
+        self.Day = ACCUdaynightfcast_class(fc["Day"])
+        self.Night = ACCUdaynightfcast_class(fc["Night"])
 
 
 def initACCU():
