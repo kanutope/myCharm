@@ -3,15 +3,19 @@
     "keyfile": "query/openweathermap.key",
     "reports": {
       "forecast": {
-        "url": "https://api.openweathermap.org/data/2.5/forecast?lat={lat:.4f}&lon={lon:.4f}&appid={key}",
+        "url": "https://api.openweathermap.org/data/2.5/forecast?appid={key}&lat={lat:.4f}&lon={lon:.4f}",
         "payload": {"units": "metric", "lang": "nl"}
       },
       "onecall": {
-        "url": "https://api.openweathermap.org/data/2.5/onecall?lat={lat:.4f}&lon={lon:.4f}&appid={key}",
+        "url": "https://api.openweathermap.org/data/2.5/onecall?appid={key}&lat={lat:.4f}&lon={lon:.4f}",
         "payload": {"units": "metric", "lang": "nl"}
       },
       "weather": {
-        "url": "https://api.openweathermap.org/data/2.5/weather?lat={lat:.4f}&lon={lon:.4f}&appid={key}",
+        "url": "https://api.openweathermap.org/data/2.5/weather?appid={key}&lat={lat:.4f}&lon={lon:.4f}",
+        "payload": {"units": "metric", "lang": "nl"}
+      },
+      "history": {
+        "url": "https://api.openweathermap.org/data/2.5/onecall/timemachine?appid={key}&lat={lat:.4f}&lon={lon:.4f}&dt={dt}",
         "payload": {"units": "metric", "lang": "nl"}
       }
     }
@@ -30,10 +34,18 @@
     "reports": {
       "current": {
         "url": "https://api.weatherbit.io/v2.0/current?key={key}&lat={lat:.4f}&lon={lon:.4f}",
-        "payload": {"lang": "nl", "units": "M", "include": "minutely"}
+        "payload": {"lang": "nl", "units": "M", "include": "alerts"}
       },
-      "quality": {
-        "url": "https://api.weatherbit.io/v2.0/current/airquality?key={key}&lat={lat:.4f}&lon={lon:.4f}",
+      "16days": {
+        "url": "https://api.weatherbit.io/v2.0/forecast/daily?key={key}&lat={lat:.4f}&lon={lon:.4f}",
+        "payload": {"lang": "nl", "units": "M"}
+      },
+      "minutely": {
+        "url": "https://api.weatherbit.io/v2.0/forecast/minutely?key={key}&lat={lat:.4f}&lon={lon:.4f}",
+        "payload": {"lang": "nl", "units": "M"}
+      },
+      "usage": {
+        "url": "https://api.weatherbit.io/v2.0/subscription/usage?key={key}&lat={lat:.4f}&lon={lon:.4f}",
         "payload": {"lang": "nl", "units": "M"}
       }
     }
